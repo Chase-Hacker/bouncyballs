@@ -6,6 +6,8 @@ const ctx = canvas.getContext('2d');
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
+let audio = new Audio("pipe.mp3");
+
 
 // function to generate random number
 function random(min, max) {
@@ -21,10 +23,18 @@ function notRandom() {
 function Ball(x, y, velX, velY, color, size) {
   this.x = x;
   this.y = y;
-  this.velX = 20;
-  this.velY = 10;
+  this.velX = velX;
+  this.velY = velY;
   this.color = color;
   this.size = size;
+}
+
+
+canvas.addEventListener("click", more);
+
+function more() {
+  balls.length + 1;
+  console.log("ball summoned")
 }
 
 Ball.prototype.draw = function() {
@@ -37,36 +47,66 @@ Ball.prototype.draw = function() {
 Ball.prototype.update = function() {
   if ((this.x + this.size) >= width) {
     this.velX = -(this.velX);
+    audio.cloneNode(true).play();
   }
 
   if ((this.x - this.size) <= 0) {
     this.velX = -(this.velX);
+    audio.cloneNode(true).play();
   }
 
   if ((this.y + this.size) >= height) {
     this.velY = -(this.velY);
+    audio.cloneNode(true).play();
   }
 
   if ((this.y - this.size) <= 0) {
     this.velY = -(this.velY);
+    audio.cloneNode(true).play();
   }
 
   this.x += this.velX;
   this.y += this.velY;
+  
 }
+
+
 
 let balls = [];
 
-while (balls.length < 1000) {
-  let size = 1;
+canvas.addEventListener("click", more);
+
+function more() {
+  let size = 4;
   let ball = new Ball(
     // ball position always drawn at least one ball width
     // away from the edge of the canvas, to avoid drawing errors
 
-    random(0 + size,width - size),
-    random(0 + size,height - size),
-    random(7,7),
-    random(7,7),
+    random(10,100),
+    random(2,10),
+    // random(0 + size,width - size),
+    // random(0 + size,height - size),
+    random(-7,7),
+    random(-8,8),
+    'rgb(' + random(0,255) + ',' + random(0,255) + ',' + random(0,255) +')',
+    size
+  );
+
+  balls.push(ball);
+}
+
+while (balls.length < 100) {
+  let size = 4;
+  let ball = new Ball(
+    // ball position always drawn at least one ball width
+    // away from the edge of the canvas, to avoid drawing errors
+
+    random(10,100),
+    random(2,10),
+    // random(0 + size,width - size),
+    // random(0 + size,height - size),
+    random(-7,7),
+    random(-8,8),
     'rgb(' + random(0,255) + ',' + random(0,255) + ',' + random(0,255) +')',
     size
   );
@@ -83,6 +123,7 @@ Ball.prototype.collisionDetect = function() {
 
       if (distance < this.size + balls[j].size) {
         balls[j].color = this.color = 'rgb(' + random(0, 255) + ',' + random(0, 255) + ',' + random(0, 255) +')';
+        balls[j].size = this.size =  random(1, 20);
       }
     }
   }
